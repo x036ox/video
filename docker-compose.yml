@@ -24,7 +24,7 @@ services:
       - local
 
   video-api:
-    image: artur110/yout-back
+    image: artur110/video-api
     build: 
       context: ./video-api
     restart: unless-stopped
