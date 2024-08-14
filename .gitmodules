@@ -1,0 +1,31 @@
+[submodule "media-processor"]
+	path = media-processor
+	url = https://github.com/x036ox/media-processor.git
+
+[submodule "video-api"]
+	path = video-api
+	url = https://github.com/x036ox/video-api.git
+
+[submodule "yout"]
+	path = yout
+	url = https://github.com/x036ox/yout.git
+
+[submodule "recommendations"]
+	path = recommendations
+	url = https://github.com/x036ox/recommendations.git
+
+[submodule "auth-server"]
+	path = auth-server
+	url = https://github.com/x036ox/auth-server.git
+
+[submodule "notifications"]
+	path = notifications
+	url = https://github.com/x036ox/notifications.git
+
+[submodule "object-storage"]
+	path = object-storage
+	url = https://github.com/x036ox/object-storage.git
+
+[submodule "common"]
+	path = common
+	url = https://github.com/x036ox/common.git
