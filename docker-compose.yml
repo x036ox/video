@@ -96,7 +96,7 @@ services:
   notifications:
     image: artur110/notifications
     build: 
-      context: ./video-notifications
+      context: ./notifications
     restart: unless-stopped
     depends_on:
       - kafka
