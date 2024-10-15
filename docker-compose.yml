@@ -15,18 +15,43 @@ services:
       - "yout"
     networks:
       - local
+  
+  keycloak:
+    image: keycloak/keycloak
+    restart: unless-stopped
+    volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./keycloak-spi-1.0.jar:/opt/keycloak/providers/keycloak-spi-1.0.jar
+    ports:
+      - "8088:8088"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: adminadmin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: adminadmin
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: "false"
+    command:
+      - start-dev
+      - --http-port=8088
+      - --import-realm
+    depends_on:
+      - keycloak-db
+    networks:
+      - local
+
 
   yout:
     image: artur110/yout
-    build: 
-      context: ./yout
     networks:
       - local
 
   video-api:
     image: artur110/video-api
-    build: 
-      context: ./video-api
     restart: unless-stopped
     ports:
       - "8080:8080"
@@ -35,7 +60,6 @@ services:
       - kafka
       - minio
       - media-processor
-      - auth-server
       - notifications
       - recommendations
       - redis
@@ -44,24 +68,8 @@ services:
     networks:
       - local
 
-  auth-server:
-    image: artur110/auth-server
-    build: 
-      context: ./video-api
-    restart: unless-stopped
-    environment:
-      - SPRING_ACTIVE_PROFILES=prod
-    ports:
-      - "8090:8090"
-    depends_on:
-      - db
-    networks:
-      - local
-
   media-processor:
     image: artur110/media-processor
-    build: 
-      context: ./media-processor
     restart: unless-stopped
     ports:
       - "8083:8081"
@@ -92,11 +100,34 @@ services:
       MYSQL_DATABASE: yout
     ports:
       - "3307:3306"
+    networks:
+      - local
+
+  auth-db:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: adminadmin
+      MYSQL_DATABASE: authorization
+    ports:
+      - "3308:3306"
+    networks:
+      - local
+
+  keycloak-db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminadmin
+    ports:
+      - 5433:5432
+    networks:
+      - local
 
   notifications:
     image: artur110/notifications
-    build: 
-      context: ./notifications
     restart: unless-stopped
     depends_on:
       - kafka
@@ -108,8 +139,6 @@ services:
 
   recommendations:
     image: artur110/recommendations
-    build: 
-      context: ./recommendations
     restart: unless-stopped
     ports:
       - "8010:8010"

@@ -1,6 +1,7 @@
 [submodule "media-processor"]
 	path = media-processor
 	url = https://github.com/x036ox/media-processor.git
+	branch = master
 
 [submodule "video-api"]
 	path = video-api
@@ -13,10 +14,6 @@
 [submodule "recommendations"]
 	path = recommendations
 	url = https://github.com/x036ox/recommendations.git
-
-[submodule "auth-server"]
-	path = auth-server
-	url = https://github.com/x036ox/auth-server.git
 
 [submodule "notifications"]
 	path = notifications
